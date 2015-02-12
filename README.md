@@ -23,3 +23,11 @@ Alternatively, you can set a default IMEI number.
 	code, err := client.SendStringToDefault("Hello, world!")
 
 
+Sending a byte slice can be done using the corresponding methods:
+
+	client.SetDefaultIMEI("1234689")
+	code, err := client.SendToDefault([]byte{79, 75})
+
+or
+
+	code, err := client.SendT("1234689", []byte{79, 75})
