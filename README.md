@@ -1,6 +1,6 @@
 # go-rockseven
 
-A simple package for interacting with your http://www.rock7mobile.com/ devices using the web interface.
+A simple package for interacting with your http://www.rock7mobile.com/ devices using a web interface.
 
 Sending a message to an endpoint, providing the IMEI number:
 
