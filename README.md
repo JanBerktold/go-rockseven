@@ -20,7 +20,8 @@ func main() {
 	} else {
 		fmt.Printf("Failed sending message %q\n", err.Error())
 	}
-}```
+}
+```
 
 Alternatively, you can set a default IMEI number.
 
@@ -65,4 +66,5 @@ func main() {
 	go printMessages(endpoint)
 	http.Handle("recieve", endpoint)
 	http.ListenAndServe(":80", nil)
-}```
+}
+```
