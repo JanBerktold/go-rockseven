@@ -32,7 +32,7 @@ Sending a byte slice can be done using the corresponding methods:
 
 or
 
-	code, err := client.SendT("1234689", []byte{79, 75})
+	code, err := client.Send("1234689", []byte{79, 75})
 
 ## Receiving
 
