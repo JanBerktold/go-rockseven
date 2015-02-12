@@ -1,6 +1,8 @@
-# go-rockseven [![Build Status](https://travis-ci.org/JanBerktold/go-rockblock.svg)](https://travis-ci.org/JanBerktold/go-rockblock)
+# go-rockseven [![Build Status](https://travis-ci.org/JanBerktold/go-rockseven.svg)](https://travis-ci.org/JanBerktold/go-rockseven)
 
 A simple package for interacting with your http://www.rock7mobile.com/ devices using a web interface.
+
+## Sending
 
 Sending a message to an endpoint, providing the IMEI number:
 
@@ -31,3 +33,7 @@ Sending a byte slice can be done using the corresponding methods:
 or
 
 	code, err := client.SendT("1234689", []byte{79, 75})
+
+## Receiving
+
+Work in progress.
