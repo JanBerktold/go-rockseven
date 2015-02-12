@@ -45,7 +45,7 @@ code, err := client.Send("1234689", []byte{79, 75})
 
 ## Receiving (Draft)
 
-The endpoint is designed to fit nicely into golang's net/http package and can therefore be used as part of a standard HTTP server. The examples below spawns a endpoint which listens on /recieve and prints all incoming messages to the stdout.
+The endpoint is designed to fit nicely into golang's net/http package and can therefore be used as part of a standard HTTP server. The example below spawns a endpoint which listens on /recieve and prints all incoming messages to the stdout.
 
 ```go
 import (
