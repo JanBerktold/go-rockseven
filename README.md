@@ -45,7 +45,7 @@ or
 		"fmt"
 	)
 
-	func printMessages(end *rock7.EndPoint) {
+	func printMessages(end *rock7.Endpoint) {
 		for {
 			select {
 			case msg := <-end.GetChannel():
@@ -55,8 +55,8 @@ or
 	}
 
 	func main() {
-		endpoint := rock7.NewEndPoint()
+		endpoint := rock7.NewEndpoint()
 		go printMessages(endpoint)
-		http.Handle("recieve", rock7.NewHandleFunc(endpoint))
+		http.Handle("recieve", endpoint)
 		http.ListenAndServe(":80", nil)
 	}
