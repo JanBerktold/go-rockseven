@@ -1,6 +1,6 @@
 # go-rockseven [![Build Status](https://travis-ci.org/JanBerktold/go-rockseven.svg)](https://travis-ci.org/JanBerktold/go-rockseven)
 
-A simple package for interacting with your http://www.rock7mobile.com/ devices using a web interface.
+A simple package for interacting with your http://www.rock7mobile.com/ devices using HTTP requests.
 
 ## Sending
 
