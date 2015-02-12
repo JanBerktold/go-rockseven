@@ -38,6 +38,7 @@ or
 
 ## Receiving (Draft)
 
+The endpoint is designed to fit nicely into golang's net/http package and can therefore be used as part of a standard HTTP server. The examples below spawns a endpoint which listens on /recieve and prints all incoming messages to the stdout.
 
 	import (
 		"net/http"
@@ -48,7 +49,7 @@ or
 	func printMessages(end *rock7.Endpoint) {
 		for {
 			msg := <-end.GetChannel()
-			fmt.Printf("Recieved message %q\n", msg)
+			fmt.Printf("Recieved message %q\n", msg.Data)
 		}
 	}
 
