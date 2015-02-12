@@ -47,10 +47,8 @@ or
 
 	func printMessages(end *rock7.Endpoint) {
 		for {
-			select {
-			case msg := <-end.GetChannel():
-				fmt.Printf("Recieved message %q\n", msg)
-			}
+			msg := <-end.GetChannel()
+			fmt.Printf("Recieved message %q\n", msg)
 		}
 	}
 
