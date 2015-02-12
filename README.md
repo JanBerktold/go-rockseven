@@ -11,12 +11,14 @@ Sending a message to an endpoint, providing the IMEI number:
 		"github.com/janberktold/go-rockseven"
 	)
 
-	client := rock7.NewClient("user", "pass")
+	func main() {
+		client := rock7.NewClient("user", "pass")
 
-	if code, err := client.SendString("1234689", "Hello, world!"); err == nil {
-		fmt.Printf("Sent message, assigned messageId: %v", code)
-	} else {
-		fmt.Printf("Failed sending message %q", err.Error())
+		if code, err := client.SendString("1234689", "Hello, world!"); err == nil {
+			fmt.Printf("Sent message, assigned messageId: %v\n", code)
+		} else {
+			fmt.Printf("Failed sending message %q\n", err.Error())
+		}
 	}
 
 Alternatively, you can set a default IMEI number.
@@ -34,6 +36,27 @@ or
 
 	code, err := client.Send("1234689", []byte{79, 75})
 
-## Receiving
+## Receiving (Draft)
 
-Work in progress.
+
+	import (
+		"net/http"
+		"github.com/janberktold/go-rockseven"
+		"fmt"
+	)
+
+	func printMessages(end *rock7.EndPoint) {
+		for {
+			select {
+			case msg := <-end.GetChannel():
+				fmt.Printf("Recieved message %q\n", msg)
+			}
+		}
+	}
+
+	func main() {
+		endpoint := rock7.NewEndPoint()
+		go printMessages(endpoint)
+		http.Handle("recieve", rock7.NewHandleFunc(endpoint))
+		http.ListenAndServe(":80", nil)
+	}
