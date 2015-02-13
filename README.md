@@ -106,7 +106,7 @@ Simple read with timeout:
 
 ```go
 for {
-	if msg, err := endpoint.ReadWithTimeout(); err == nil {
+	if msg, err := endpoint.ReadWithTimeout(2 * time.Second); err == nil {
 		fmt.Printf("Recieved message %q\n", msg.Data)
 	} else {
 		fmt.Println(err.Error())
@@ -121,7 +121,7 @@ for {
 	select {
 	case msg := <-endpoint.channel:
 		fmt.Printf("Recieved message %q\n", msg.Data)
-	case <-time.After(dur):
+	case <-time.After(2 * time.Second):
 		fmt.Println("Hit time limit")
 	}
 }
