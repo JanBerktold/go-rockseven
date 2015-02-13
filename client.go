@@ -88,9 +88,8 @@ func parseResponse(read io.Reader) (string, error) {
 		err, ok := MappedErrNum[errNum]
 		if ok {
 			return "", err
-		} else {
-			return "", fmt.Errorf("Unknown error %v: %q", errNum, string(response[10:]))
 		}
+		return "", fmt.Errorf("unknown error %v: %q", errNum, string(response[10:]))
 	}
 
 	return string(response[3:]), nil
