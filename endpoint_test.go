@@ -165,3 +165,50 @@ func TestWrongHex(t *testing.T) {
 	fakeRequest(endpoint, req)
 	t.Fatal("This point should not have been reached.")
 }
+
+func TestRead(t *testing.T) {
+	endpoint := NewEndpoint()
+
+	go func() {
+		if code, _ := fakeRequest(endpoint, constructRequest("POST", "Request 1")); code != 200 {
+			t.Fatalf("Recieved non-OK status %v", code)
+		}
+	}()
+
+	message := endpoint.Read()
+	if !compareMessage(message, "Request 1") {
+		t.Fatalf("Failed")
+	}
+}
+
+func TestReadTimeoutHit(t *testing.T) {
+	endpoint := NewEndpoint()
+
+	go func() {
+		time.Sleep(2 * time.Second)
+		if code, _ := fakeRequest(endpoint, constructRequest("POST", "Request 1")); code == 200 {
+			t.Fatal("Expected non-OK status")
+		}
+	}()
+
+	_, err := endpoint.ReadWithTimeout(1 * time.Second)
+	if err != ErrTimeOut {
+		t.Fatalf("Failed")
+	}
+}
+
+func TestReadTimeoutNotHit(t *testing.T) {
+	endpoint := NewEndpoint()
+
+	go func() {
+		time.Sleep(1 * time.Second)
+		if code, _ := fakeRequest(endpoint, constructRequest("POST", "Request 1")); code != 200 {
+			t.Fatal("Expected OK status, got %v", code)
+		}
+	}()
+
+	message, err := endpoint.ReadWithTimeout(2 * time.Second)
+	if !compareMessage(message, "Request 1") || err == ErrTimeOut {
+		t.Fatalf("Failed")
+	}
+}

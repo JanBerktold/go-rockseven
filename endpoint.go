@@ -30,6 +30,21 @@ func NewEndpoint() *Endpoint {
 	}
 }
 
+// Read returns the next message recieved. Convenience wrapper around the channel.
+func (end *Endpoint) Read() Message {
+	return <-end.channel
+}
+
+// Read returns the next message recieved or nil, if the time limit has been hit. Convenience wrapper around the channel.
+func (end *Endpoint) ReadWithTimeout(dur time.Duration) (Message, error) {
+	select {
+	case msg := <-end.channel:
+		return msg, nil
+	case <-time.After(dur):
+		return Message{}, ErrTimeOut
+	}
+}
+
 // GetChannel returns a channel containing all recieved messages.
 // Getter method is required due to access locking.
 func (end *Endpoint) GetChannel() <-chan Message {

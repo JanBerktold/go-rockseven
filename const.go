@@ -19,6 +19,7 @@ var (
 	ErrSystem     = errors.New("system Error")
 	ErrDefaultSet = errors.New("default IMEI not set")
 	ErrUnknownErr = errors.New("invalid error # returned by system")
+	ErrTimeOut    = errors.New("hit time limit")
 
 	MappedErrNum = map[int]error{
 		10: ErrLoginCred,
