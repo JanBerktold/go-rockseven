@@ -14,6 +14,7 @@ import (
 type Client struct {
 	user, pass string
 	defIMEI    string
+	address    string
 }
 
 // NewClient creates a new Client which is used for sending messages to deployed devices. Please note that the credentials are not checked upon creation of the Client object, but once the first request is triggered.
@@ -22,6 +23,7 @@ func NewClient(user, pass string) *Client {
 		user,
 		pass,
 		"",
+		sendURL,
 	}
 }
 
@@ -40,7 +42,7 @@ func (cl *Client) Send(imei string, msg []byte) (string, error) {
 	values.Add("password", cl.pass)
 	values.Add("data", string(data))
 
-	resp, err := http.Post(sendURL, "", bytes.NewBufferString(values.Encode()))
+	resp, err := http.Post(cl.address, "application/x-www-form-urlencoded", bytes.NewBufferString(values.Encode()))
 
 	if err != nil {
 		return "", err
@@ -81,15 +83,21 @@ func parseResponse(read io.Reader) (string, error) {
 	response := make([]byte, 200)
 	n, _ := io.ReadFull(read, response)
 	response = response[0:n]
-	fmt.Println(string(response))
+
 	// checks for OK
-	if response[0] != byte(79) || response[1] != byte(75) {
+	if len(response) < 2 || response[0] != byte(79) || response[1] != byte(75) {
 		errNum := intFromSlice(response[7:9])
 		err, ok := MappedErrNum[errNum]
 		if ok {
 			return "", err
 		}
-		return "", fmt.Errorf("unknown error %v: %q", errNum, string(response[10:]))
+		var stringResp string
+		if len(response) > 10 {
+			stringResp = string(response[10:])
+		} else {
+			stringResp = ""
+		}
+		return "", fmt.Errorf("unknown error %v: %q", errNum, stringResp)
 	}
 
 	return string(response[3:]), nil

@@ -3,8 +3,32 @@ package rock7
 import (
 	"bytes"
 	"fmt"
+	"net/http"
+	"net/http/httptest"
 	"testing"
 )
+
+const (
+	defaultUser = "this_is_me"
+	defaultPass = "not_my_pass"
+)
+
+func createTestServer(user, pass, imei string) *httptest.Server {
+	return httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+
+		if r.FormValue("username") != user || r.FormValue("password") != pass {
+			fmt.Fprintf(w, "FAILED,10,invalid login credentials")
+			return
+		}
+
+		if r.FormValue("imei") != imei {
+			fmt.Fprintf(w, "FAILED,11,no RockBLOCK with this IMEI found on your account")
+			return
+		}
+
+		fmt.Fprint(w, "OK,RANDOMCODE124afio")
+	}))
+}
 
 func TestSuccessParsingResponse(t *testing.T) {
 	resp := bytes.NewBufferString("OK,12345678")
@@ -33,7 +57,16 @@ func TestIntFromSlice(t *testing.T) {
 	}
 }
 
-func TestRandom(t *testing.T) {
-	cl := NewClient("this_is_me", "not_my_pass")
-	fmt.Println(cl.SendString("12345", "A message"))
+func TestBasicSend(t *testing.T) {
+	serv := createTestServer(defaultUser, defaultPass, "123456789")
+	defer serv.Close()
+
+	cl := NewClient(defaultUser, defaultPass)
+	cl.address = serv.URL
+
+	code, err := cl.Send("123456789", []byte("1234abcdefg"))
+
+	if err != nil || code != "RANDOMCODE124afio" {
+		t.Fatalf("Expected nil error and code 'RANDOMCODE124afio', got %v and %q", err, code)
+	}
 }
