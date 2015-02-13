@@ -5,9 +5,8 @@ go:
   - 1.3
   - 1.4
 
-env:
-  global:
-    - secure: "q67NzPj8y5YJHVykndlq9HOBsUbN7dkXdX8BRkv/OdtQGf8o34JDULCDQQfy1z6sSe+yVYmup1427fFXyh3Ss51fD0bVPo9vDGuJmwbKl4Exq39abkS0VYchhFzsNBvWunkbyIGp0PvSnA7PicpWI9BvQSmyAw72PnoC0lqozys="
+notifications:
+  email: false
 
 before_install:
   - go get github.com/axw/gocov/gocov

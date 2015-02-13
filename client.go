@@ -81,7 +81,7 @@ func parseResponse(read io.Reader) (string, error) {
 	response := make([]byte, 200)
 	n, _ := io.ReadFull(read, response)
 	response = response[0:n]
-
+	fmt.Println(string(response))
 	// checks for OK
 	if response[0] != byte(79) || response[1] != byte(75) {
 		errNum := intFromSlice(response[7:9])

@@ -2,6 +2,7 @@ package rock7
 
 import (
 	"bytes"
+	"fmt"
 	"testing"
 )
 
@@ -30,4 +31,9 @@ func TestIntFromSlice(t *testing.T) {
 	if num := intFromSlice([]byte("12")); num != 12 {
 		t.Fatalf("Expected 12, got %v", num)
 	}
+}
+
+func TestRandom(t *testing.T) {
+	cl := NewClient("this_is_me", "not_my_pass")
+	fmt.Println(cl.SendString("12345", "A message"))
 }
