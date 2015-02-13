@@ -10,6 +10,12 @@ Package is designed to be compatible with every major Go release since 1.3. It c
 
 		go get github.com/janberktold/go-rockseven
 
+## TODO
+
+- Fix time parsing while recieving
+- Perform final tests with RockBLOCK device
+- Write further GoDoc documentation
+
 ## Sending
 
 Sending a message to an endpoint, providing the IMEI number:
