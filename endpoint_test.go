@@ -47,7 +47,10 @@ func TestSimpleMessage(t *testing.T) {
 
 	go func() {
 		for i := 0; i < 5; i++ {
-			fakeRequest(endpoint, "POST", fmt.Sprintf("Request %v", i))
+			code, _ := fakeRequest(endpoint, "POST", fmt.Sprintf("Request %v", i))
+			if code != 200 {
+				t.Fatalf("Recieved non-OK status %v", code)
+			}
 		}
 	}()
 
