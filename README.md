@@ -1,5 +1,5 @@
 # go-rockseven
-[![Build Status](https://travis-ci.org/JanBerktold/go-rockseven.svg)](https://travis-ci.org/JanBerktold/go-rockseven) [![Coverage Status](https://coveralls.io/repos/JanBerktold/go-rockseven/badge.svg)](https://coveralls.io/r/JanBerktold/go-rockseven)[![GoDoc](http://godoc.org/github.com/janberktold/go-rockseven?status.svg)](http://godoc.org/github.com/janberktold/go-rockseven)
+[![Build Status](https://travis-ci.org/JanBerktold/go-rockseven.svg)](https://travis-ci.org/JanBerktold/go-rockseven) [![Coverage Status](https://coveralls.io/repos/JanBerktold/go-rockseven/badge.svg)](https://coveralls.io/r/JanBerktold/go-rockseven) [![GoDoc](http://godoc.org/github.com/janberktold/go-rockseven?status.svg)](http://godoc.org/github.com/janberktold/go-rockseven)
 
 
 A simple package for interacting with your http://www.rock7mobile.com/ devices using HTTP requests.
