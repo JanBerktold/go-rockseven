@@ -114,3 +114,17 @@ func TestBasicStringDefaultSend(t *testing.T) {
 		t.Fatalf("Expected nil error and code 'RANDOMCODE124afio', got %v and %q", err, code)
 	}
 }
+
+func TestStringDefaultSendFailure(t *testing.T) {
+	serv := createTestServer(defaultUser, defaultPass, "123456789")
+	defer serv.Close()
+
+	cl := NewClient(defaultUser, defaultPass)
+	cl.address = serv.URL
+
+	code, err := cl.SendStringToDefault("1234abcdefg")
+
+	if err != ErrDefaultSet || code != "" {
+		t.Fatalf("Expected error %q and code '', got %v and %q", ErrDefaultSet, err, code)
+	}
+}
