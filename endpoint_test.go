@@ -12,15 +12,15 @@ import (
 	"time"
 )
 
-func fakeRequest(handler http.Handler, msg string) (code int, returnBody string) {
-	req := constructRequest(msg)
+func fakeRequest(handler http.Handler, method, msg string) (code int, returnBody string) {
+	req := constructRequest(method, msg)
 	w := httptest.NewRecorder()
 	handler.ServeHTTP(w, req)
 
 	return w.Code, w.Body.String()
 }
 
-func constructRequest(msg string) *http.Request {
+func constructRequest(method, msg string) *http.Request {
 	param := url.Values{}
 	param.Add("imei", "123456789")
 	param.Add("momsn", "12345")
@@ -29,7 +29,7 @@ func constructRequest(msg string) *http.Request {
 	param.Add("iridium_longitude", "23.987")
 	param.Add("iridium_cep", "2")
 	param.Add("data", hex.EncodeToString([]byte(msg)))
-	req, _ := http.NewRequest("POST", "http://localhost/recieve", bytes.NewBufferString(param.Encode()))
+	req, _ := http.NewRequest(method, "http://localhost/recieve", bytes.NewBufferString(param.Encode()))
 	req.Header.Set("Content-Type", "application/x-www-form-urlencoded")
 	return req
 }
@@ -47,7 +47,7 @@ func TestSimpleMessage(t *testing.T) {
 
 	go func() {
 		for i := 0; i < 5; i++ {
-			fakeRequest(endpoint, fmt.Sprintf("Request %v", i))
+			fakeRequest(endpoint, "POST", fmt.Sprintf("Request %v", i))
 		}
 	}()
 
@@ -56,6 +56,21 @@ func TestSimpleMessage(t *testing.T) {
 		if !compareMessage(message, fmt.Sprintf("Request %v", i)) {
 			t.Fatalf("Failed")
 		}
+	}
+
+}
+
+func TestWrongMethod(t *testing.T) {
+
+	endpoint := NewEndpoint()
+
+	go func() {
+		<-endpoint.GetChannel()
+		t.Fatal("Recieved a message, even though none should have been sent.")
+	}()
+
+	if code, _ := fakeRequest(endpoint, "GET", "RequestData"); code == 200 {
+		t.Fatalf("Non-OK code expected, got %v", code)
 	}
 
 }
