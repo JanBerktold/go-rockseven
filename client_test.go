@@ -127,4 +127,10 @@ func TestStringDefaultSendFailure(t *testing.T) {
 	if err != ErrDefaultSet || code != "" {
 		t.Fatalf("Expected error %q and code '', got %v and %q", ErrDefaultSet, err, code)
 	}
+
+	code, err = cl.SendToDefault([]byte("1234abcdefg"))
+
+	if err != ErrDefaultSet || code != "" {
+		t.Fatalf("Expected error %q and code '', got %v and %q", ErrDefaultSet, err, code)
+	}
 }
