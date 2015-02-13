@@ -32,6 +32,11 @@ func (end *Endpoint) GetChannel() <-chan Message {
 	return end.channel
 }
 
-func (end *Endpoint) ServeHTTP(http.ResponseWriter, *http.Request) {
+func (end *Endpoint) ServeHTTP(writer http.ResponseWriter, req *http.Request) {
+
+	if req.Method != "POST" {
+		writer.WriteHeader(http.StatusBadRequest)
+		return
+	}
 
 }
