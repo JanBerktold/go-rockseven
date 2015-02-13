@@ -6,7 +6,7 @@ A simple package for interacting with your http://www.rock7mobile.com/ devices u
 
 ## Installation
 
-Package is designed to be compatible with every major Go release since 1.3. It can be installed using Go's native toolchain.
+Package is designed to be compatible with every major Go release since 1.2. It can be installed using Go's native toolchain.
 
 		go get github.com/janberktold/go-rockseven
 
