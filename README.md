@@ -15,7 +15,6 @@ Package is designed to be compatible with every major Go release since 1.2. It c
 - Perform final tests with RockBLOCK device
 - Write further tests
 - Write further GoDoc documentation
-- Finish README section on recieving
 
 ## Sending
 
@@ -58,7 +57,7 @@ or
 code, err := client.Send("1234689", []byte{79, 75})
 ```
 
-## Receiving (Draft)
+## Receiving
 
 The endpoint is designed to fit nicely into golang's net/http package and can therefore be used as part of a standard HTTP server. The example below spawns a endpoint which listens on /recieve and prints all incoming messages to the stdout.
 
@@ -81,5 +80,49 @@ func main() {
 	go printMessages(endpoint)
 	http.Handle("recieve", endpoint)
 	http.ListenAndServe(":80", nil)
+}
+```
+
+In general, there are two different approaches to access incoming messages: On the one hand, you can obtain a recieve-only channel via client.GetChannel() and implement your own reading mechanism. Example:
+
+```go
+for {
+	msg := <-endpoint.GetChannel()
+	fmt.Printf("Recieved message %q\n", msg.Data)
+}
+```
+
+Alternatively, you can use the provided convenience methods Read and ReadWithTimeout(time.Duration) to keep track of incoming messages. Both methods are blocking, as set in the Golang coding guidelines. Simple read:
+
+
+```go
+for {
+	msg := endpoint.Read()
+	fmt.Printf("Recieved message %q\n", msg.Data)
+}
+```
+
+Simple read with timeout:
+
+```go
+for {
+	if msg, err := endpoint.ReadWithTimeout(); err == nil {
+		fmt.Printf("Recieved message %q\n", msg.Data)
+	} else {
+		fmt.Println(err.Error())
+	}
+}
+```
+
+A timeout can also be implemented using the raw channel:
+
+```go
+for {
+	select {
+	case msg := <-endpoint.channel:
+		fmt.Printf("Recieved message %q\n", msg.Data)
+	case <-time.After(dur):
+		fmt.Println("Hit time limit")
+	}
 }
 ```
