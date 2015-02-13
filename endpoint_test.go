@@ -24,7 +24,7 @@ func constructRequest(method, msg string) *http.Request {
 	param := url.Values{}
 	param.Add("imei", "123456789")
 	param.Add("momsn", "12345")
-	param.Add("transmit_time", time.Now().Format("12-10-10 10:41:50"))
+	param.Add("transmit_time", time.Now().UTC().Format("06-02-01 15:04:05"))
 	param.Add("iridium_latitude", "54.123")
 	param.Add("iridium_longitude", "23.987")
 	param.Add("iridium_cep", "2")
@@ -35,7 +35,13 @@ func constructRequest(method, msg string) *http.Request {
 }
 
 func compareMessage(msg Message, body string) bool {
-	return msg.Data == body && msg.MOMSN == 12345 && msg.IMEI == "123456789" && msg.IridiumCep == 2 && *msg.IridumPos == *geo.NewPoint(54.123, 23.987)
+	diff := time.Now().UTC().Sub(msg.TransmitTime)
+	return msg.Data == body &&
+		msg.MOMSN == 12345 &&
+		msg.IMEI == "123456789" &&
+		msg.IridiumCep == 2 &&
+		*msg.IridumPos == *geo.NewPoint(54.123, 23.987) &&
+		diff.Seconds() < 1
 }
 
 func TestInterface(t *testing.T) {

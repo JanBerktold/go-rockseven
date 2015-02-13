@@ -62,6 +62,15 @@ func readHex(n string) string {
 	return string(by)
 }
 
+func readTime(n string) time.Time {
+	tim, err := time.Parse("06-02-01 15:04:05", n)
+
+	if err != nil {
+		panic("Invalid request, panic'ing to cancel request")
+	}
+	return tim
+}
+
 // Fulfills the requirements for the http.Handler interface. This method should never be called by your code, as it is triggered by the net/http implementation of a HTTP server.
 // Allows you to set a created Endpoint as the handler for a URL using http.Handle("recieve", rock7.NewEndpoint()).
 func (end *Endpoint) ServeHTTP(writer http.ResponseWriter, req *http.Request) {
@@ -75,7 +84,7 @@ func (end *Endpoint) ServeHTTP(writer http.ResponseWriter, req *http.Request) {
 	end.channel <- Message{
 		req.FormValue("imei"),
 		readInt(req.FormValue("momsn")),
-		time.Now(),
+		readTime(req.FormValue("transmit_time")),
 		geo.NewPoint(
 			readFloat64(req.FormValue("iridium_latitude")),
 			readFloat64(req.FormValue("iridium_longitude")),
