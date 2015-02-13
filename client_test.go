@@ -70,3 +70,47 @@ func TestBasicSend(t *testing.T) {
 		t.Fatalf("Expected nil error and code 'RANDOMCODE124afio', got %v and %q", err, code)
 	}
 }
+
+func TestBasicDefaultSend(t *testing.T) {
+	serv := createTestServer(defaultUser, defaultPass, "123456789")
+	defer serv.Close()
+
+	cl := NewClient(defaultUser, defaultPass)
+	cl.address = serv.URL
+
+	cl.SetDefaultIMEI("123456789")
+	code, err := cl.SendToDefault([]byte("1234abcdefg"))
+
+	if err != nil || code != "RANDOMCODE124afio" {
+		t.Fatalf("Expected nil error and code 'RANDOMCODE124afio', got %v and %q", err, code)
+	}
+}
+
+func TestBasicStringSend(t *testing.T) {
+	serv := createTestServer(defaultUser, defaultPass, "123456789")
+	defer serv.Close()
+
+	cl := NewClient(defaultUser, defaultPass)
+	cl.address = serv.URL
+
+	code, err := cl.SendString("123456789", "1234abcdefg")
+
+	if err != nil || code != "RANDOMCODE124afio" {
+		t.Fatalf("Expected nil error and code 'RANDOMCODE124afio', got %v and %q", err, code)
+	}
+}
+
+func TestBasicStringDefaultSend(t *testing.T) {
+	serv := createTestServer(defaultUser, defaultPass, "123456789")
+	defer serv.Close()
+
+	cl := NewClient(defaultUser, defaultPass)
+	cl.address = serv.URL
+
+	cl.SetDefaultIMEI("123456789")
+	code, err := cl.SendStringToDefault("1234abcdefg")
+
+	if err != nil || code != "RANDOMCODE124afio" {
+		t.Fatalf("Expected nil error and code 'RANDOMCODE124afio', got %v and %q", err, code)
+	}
+}
