@@ -22,6 +22,7 @@ type Endpoint struct {
 	channel chan Message
 }
 
+// Creates a new endpoint for recieving messages. Should be added to an HttpMux by http.Handle("/your/path", endpoint).
 func NewEndpoint() *Endpoint {
 	return &Endpoint{
 		make(chan Message),
@@ -61,6 +62,8 @@ func readHex(n string) string {
 	return string(by)
 }
 
+// Fulfills the requirements for the http.Handler interface. This method should never be called by your code, as it is triggered by the net/http implementation of a HTTP server.
+// Allows you to set a created Endpoint as the handler for a URL using http.Handle("recieve", rock7.NewEndpoint()).
 func (end *Endpoint) ServeHTTP(writer http.ResponseWriter, req *http.Request) {
 
 	if req.Method != "POST" {
