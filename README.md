@@ -119,7 +119,7 @@ A timeout can also be implemented using the raw channel:
 ```go
 for {
 	select {
-	case msg := <-endpoint.channel:
+	case msg := <-endpoint.GetChannel():
 		fmt.Printf("Recieved message %q\n", msg.Data)
 	case <-time.After(2 * time.Second):
 		fmt.Println("Hit time limit")
