@@ -103,3 +103,65 @@ func TestWrongMomsn(t *testing.T) {
 	fakeRequest(endpoint, req)
 	t.Fatal("This point should not have been reached.")
 }
+
+func TestWrongTime(t *testing.T) {
+	defer func() {
+		if r := recover(); r == nil {
+			t.Fatalf("Call did not fail\n")
+		}
+	}()
+
+	endpoint := NewEndpoint()
+
+	param := url.Values{}
+	param.Add("imei", "123456789")
+	param.Add("momsn", "12")
+	param.Add("transmit_time", "06/02/01")
+	req := constructRequest("POST", "RequestData", param)
+
+	fakeRequest(endpoint, req)
+	t.Fatal("This point should not have been reached.")
+}
+
+func TestWrongGeoPos(t *testing.T) {
+	defer func() {
+		if r := recover(); r == nil {
+			t.Fatalf("Call did not fail\n")
+		}
+	}()
+
+	endpoint := NewEndpoint()
+
+	param := url.Values{}
+	param.Add("imei", "123456789")
+	param.Add("momsn", "12")
+	param.Add("transmit_time", "06-02-01 15:04:05")
+	param.Add("iridium_latitude", "ab25ad8g.12")
+	req := constructRequest("POST", "RequestData", param)
+
+	fakeRequest(endpoint, req)
+	t.Fatal("This point should not have been reached.")
+}
+
+func TestWrongHex(t *testing.T) {
+	defer func() {
+		if r := recover(); r == nil {
+			t.Fatalf("Call did not fail\n")
+		}
+	}()
+
+	endpoint := NewEndpoint()
+
+	param := url.Values{}
+	param.Add("imei", "123456789")
+	param.Add("momsn", "12345")
+	param.Add("transmit_time", time.Now().UTC().Format("06-02-01 15:04:05"))
+	param.Add("iridium_latitude", "54.123")
+	param.Add("iridium_longitude", "23.987")
+	param.Add("iridium_cep", "2")
+	param.Add("data", "afadfpoi3a5oudf")
+	req := constructRequest("POST", "RequestData", param)
+
+	fakeRequest(endpoint, req)
+	t.Fatal("This point should not have been reached.")
+}
