@@ -52,6 +52,15 @@ func readFloat64(n string) float64 {
 	return num
 }
 
+func readHex(n string) string {
+	by, err := hex.DecodeString(n)
+
+	if err != nil {
+		panic("Invalid request, panic'ing to cancel request")
+	}
+	return string(by)
+}
+
 func (end *Endpoint) ServeHTTP(writer http.ResponseWriter, req *http.Request) {
 
 	if req.Method != "POST" {
@@ -59,26 +68,18 @@ func (end *Endpoint) ServeHTTP(writer http.ResponseWriter, req *http.Request) {
 		return
 	}
 
-	data := req.FormValue("data")
-	by, err := hex.DecodeString(data)
-
 	// TODO: Read time
-	if err == nil {
-		end.channel <- Message{
-			req.FormValue("imei"),
-			readInt(req.FormValue("momsn")),
-			time.Now(),
-			geo.NewPoint(
-				readFloat64(req.FormValue("iridium_latitude")),
-				readFloat64(req.FormValue("iridium_longitude")),
-			),
-			readInt(req.FormValue("iridium_cep")),
-			data,
-			string(by),
-		}
-		writer.WriteHeader(http.StatusOK)
-	} else {
-		writer.WriteHeader(http.StatusBadRequest)
+	end.channel <- Message{
+		req.FormValue("imei"),
+		readInt(req.FormValue("momsn")),
+		time.Now(),
+		geo.NewPoint(
+			readFloat64(req.FormValue("iridium_latitude")),
+			readFloat64(req.FormValue("iridium_longitude")),
+		),
+		readInt(req.FormValue("iridium_cep")),
+		req.FormValue("data"),
+		readHex(req.FormValue("data")),
 	}
-
+	writer.WriteHeader(http.StatusOK)
 }
