@@ -8,6 +8,7 @@ import (
 	"time"
 )
 
+// Message represents all parameters of a recieved message.
 type Message struct {
 	IMEI         string
 	MOMSN        int
@@ -22,14 +23,14 @@ type Endpoint struct {
 	channel chan Message
 }
 
-// Creates a new endpoint for recieving messages. Should be added to an HttpMux by http.Handle("/your/path", endpoint).
+// NewEndpoint creates a new endpoint for recieving messages. Should be added to an HttpMux by http.Handle("/your/path", endpoint).
 func NewEndpoint() *Endpoint {
 	return &Endpoint{
 		make(chan Message),
 	}
 }
 
-// Returns a channel contained all recieved messages.
+// GetChannel returns a channel containing all recieved messages.
 // Getter method is required due to access locking.
 func (end *Endpoint) GetChannel() <-chan Message {
 	return end.channel

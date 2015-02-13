@@ -4,7 +4,6 @@ import (
 	"bytes"
 	"code.google.com/p/intmath/intgr"
 	"encoding/hex"
-	"errors"
 	"fmt"
 	"io"
 	"net/http"
@@ -16,7 +15,7 @@ type Client struct {
 	defIMEI    string
 }
 
-// Creates a new client which is used for sending messages to deployed devices. Please note that the credentials are not checked upon creation of the Client object, but once the first request is triggered.
+// NewClient a new client which is used for sending messages to deployed devices. Please note that the credentials are not checked upon creation of the Client object, but once the first request is triggered.
 func NewClient(user, pass string) *Client {
 	return &Client{
 		user,
@@ -25,7 +24,7 @@ func NewClient(user, pass string) *Client {
 	}
 }
 
-// Sets the default IMEI for use with client.SendStringToDefault and client.SendToDefault.
+// SetDefaultIMEI sets IMEI for use with client.SendStringToDefault and client.SendToDefault.
 func (cl *Client) SetDefaultIMEI(imei string) {
 	cl.defIMEI = imei
 }
@@ -89,7 +88,7 @@ func parseResponse(read io.Reader) (string, error) {
 		if ok {
 			return "", err
 		} else {
-			return "", errors.New(fmt.Sprintf("Unknown error %v: %q", errNum, string(response[10:])))
+			return "", fmt.Errorf("Unknown error %v: %q", errNum, string(response[10:]))
 		}
 	}
 
