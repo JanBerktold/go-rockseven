@@ -10,12 +10,13 @@ import (
 	"net/url"
 )
 
+// Client is used for sending messages to deployed devices. Should only be created using NewClient.
 type Client struct {
 	user, pass string
 	defIMEI    string
 }
 
-// NewClient a new client which is used for sending messages to deployed devices. Please note that the credentials are not checked upon creation of the Client object, but once the first request is triggered.
+// NewClient creates a new Client which is used for sending messages to deployed devices. Please note that the credentials are not checked upon creation of the Client object, but once the first request is triggered.
 func NewClient(user, pass string) *Client {
 	return &Client{
 		user,
@@ -24,7 +25,7 @@ func NewClient(user, pass string) *Client {
 	}
 }
 
-// SetDefaultIMEI sets IMEI for use with client.SendStringToDefault and client.SendToDefault.
+// SetDefaultIMEI sets IMEI for use with Client.SendStringToDefault and Client.SendToDefault.
 func (cl *Client) SetDefaultIMEI(imei string) {
 	cl.defIMEI = imei
 }
@@ -43,10 +44,10 @@ func (cl *Client) Send(imei string, msg []byte) (string, error) {
 
 	if err != nil {
 		return "", err
-	} else {
-		defer resp.Body.Close()
-		return parseResponse(resp.Body)
 	}
+
+	defer resp.Body.Close()
+	return parseResponse(resp.Body)
 }
 
 func (cl *Client) SendString(imei, msg string) (string, error) {

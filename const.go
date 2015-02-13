@@ -9,16 +9,16 @@ const (
 )
 
 var (
-	ErrLoginCred  = errors.New("Invalid login credentials")
-	ErrWrongIMEI  = errors.New("No RockBLOCK with this IMEI found on your account")
-	ErrNoRental   = errors.New("RockBLOCK has no line rental")
-	ErrInsuffCred = errors.New("Your account has insufficient credit")
-	ErrDecodHex   = errors.New("Could not decode hex data")
-	ErrLongData   = errors.New("Data too long")
-	ErrNoData     = errors.New("No data")
-	ErrSystem     = errors.New("System Error")
-	ErrDefaultSet = errors.New("Default IMEI not set")
-	ErrUnknownErr = errors.New("Invalid error # returned by system")
+	ErrLoginCred  = errors.New("invalid login credentials")
+	ErrWrongIMEI  = errors.New("no RockBLOCK with this IMEI found on your account")
+	ErrNoRental   = errors.New("rockBLOCK has no line rental")
+	ErrInsuffCred = errors.New("your account has insufficient credit")
+	ErrDecodHex   = errors.New("could not decode hex data")
+	ErrLongData   = errors.New("data too long")
+	ErrNoData     = errors.New("no data")
+	ErrSystem     = errors.New("system Error")
+	ErrDefaultSet = errors.New("default IMEI not set")
+	ErrUnknownErr = errors.New("invalid error # returned by system")
 
 	MappedErrNum = map[int]error{
 		10: ErrLoginCred,
