@@ -134,3 +134,14 @@ func TestStringDefaultSendFailure(t *testing.T) {
 		t.Fatalf("Expected error %q and code '', got %v and %q", ErrDefaultSet, err, code)
 	}
 }
+
+func TestFailedHttpRequest(t *testing.T) {
+	cl := NewClient(defaultUser, defaultPass)
+	cl.address = "http://idonotexist.orgde"
+
+	code, err := cl.SendString("12345", "1234abcdefg")
+
+	if code != "" || err == nil {
+		t.FailNow()
+	}
+}
