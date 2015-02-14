@@ -13,6 +13,11 @@ const (
 	defaultPass = "not_my_pass"
 )
 
+func createDeadTestServer() *httptest.Server {
+	return httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+	}))
+}
+
 func createTestServer(user, pass, imei string) *httptest.Server {
 	return httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 
@@ -143,5 +148,19 @@ func TestFailedHttpRequest(t *testing.T) {
 
 	if code != "" || err == nil {
 		t.FailNow()
+	}
+}
+
+func TestNoResponseFailure(t *testing.T) {
+	serv := createDeadTestServer()
+	defer serv.Close()
+
+	cl := NewClient(defaultUser, defaultPass)
+	cl.address = serv.URL
+
+	code, err := cl.SendStringToDefault("1234abcdefg")
+
+	if err != ErrDefaultSet || code != "" {
+		t.Fatalf("Expected error %q and code '', got %v and %q", ErrDefaultSet, err, code)
 	}
 }
