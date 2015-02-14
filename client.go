@@ -32,6 +32,11 @@ func (cl *Client) SetDefaultIMEI(imei string) {
 	cl.defIMEI = imei
 }
 
+// Send performs the task of transmitting a message to a rockseven device.
+// Returns the unique id which has been assigned to the message and is also available for the receiving device.
+// Errors can occur in the case of connection issue between the client and rockseven's
+// servers or in the case of problems on rockseven's site. The returned error object
+// gives more detailed information in each case.
 func (cl *Client) Send(imei string, msg []byte) (string, error) {
 	data := make([]byte, hex.EncodedLen(len(msg)))
 	hex.Encode(data, msg)
@@ -52,10 +57,14 @@ func (cl *Client) Send(imei string, msg []byte) (string, error) {
 	return parseResponse(resp.Body)
 }
 
+// SendString is convenience wrapper for Send which takes the string representation
+// of a message instead of a byte slice.
 func (cl *Client) SendString(imei, msg string) (string, error) {
 	return cl.Send(imei, []byte(msg))
 }
 
+// SendStringToDefault's behaviour is similar to SendString, however unlike SendString which sends
+// its message to a specified IMEI, this method sends the message to the default IMEI number.
 func (cl *Client) SendStringToDefault(msg string) (string, error) {
 	if len(cl.defIMEI) == 0 {
 		return "", ErrDefaultSet
@@ -63,6 +72,8 @@ func (cl *Client) SendStringToDefault(msg string) (string, error) {
 	return cl.Send(cl.defIMEI, []byte(msg))
 }
 
+// SendToDefault's behaviour is similar to Send, however unlike Send which targets a specified IMEI,
+// this method sends the message to the default IMEI number.
 func (cl *Client) SendToDefault(msg []byte) (string, error) {
 	if len(cl.defIMEI) == 0 {
 		return "", ErrDefaultSet
