@@ -19,11 +19,14 @@ type Message struct {
 	Data         string
 }
 
+// Endpoint is being used as the representation of the server which receives incoming messages
+// from deployed devices. Should always be created using NewEndpoint.
 type Endpoint struct {
 	channel chan Message
 }
 
-// NewEndpoint creates a new endpoint for recieving messages. Should be added to an HttpMux by http.Handle("/your/path", endpoint).
+// NewEndpoint creates a new endpoint for recieving messages. Should be added to an HttpMux
+// using http.Handle("/your/path", endpoint).
 func NewEndpoint() *Endpoint {
 	return &Endpoint{
 		make(chan Message),
@@ -35,7 +38,8 @@ func (end *Endpoint) Read() Message {
 	return <-end.channel
 }
 
-// Read returns the next message recieved or nil, if the time limit has been hit. Convenience wrapper around the channel.
+// ReadWithTimeout returns the next message recieved or nil, if the time limit has been hit.
+// Convenience wrapper around the channel.
 func (end *Endpoint) ReadWithTimeout(dur time.Duration) (Message, error) {
 	select {
 	case msg := <-end.channel:
@@ -96,7 +100,6 @@ func (end *Endpoint) ServeHTTP(writer http.ResponseWriter, req *http.Request) {
 		return
 	}
 
-	// TODO: Read time
 	end.channel <- Message{
 		req.FormValue("imei"),
 		readInt(req.FormValue("momsn")),
